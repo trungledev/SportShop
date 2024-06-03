@@ -1,0 +1,57 @@
+﻿@using SportShop.Data;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+    
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+        
+            @if (SignInManager.IsSignedIn(User))
+            {
+            <li class="d-flex">
+                <a asp-area="" asp-controller="Carts" asp-action="Index" class="nav-link text-white ">
+                  <em class="bi bi-cart4"></em>
+                  Giỏ Hàng
+                </a>
+            </li>
+        <li class="d-flex nav-item ">
+            <a class="nav-link text-white px-0" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                <span class="">
+                    <button type="button" class="btn btn-light border text-dark me-2">
+                        <i class="h1 bi bi-person-circle d-block d-md-none mb-0"></i>
+                        <p class="d-none d-md-block mb-0" >Hello, @user.FullName!</p>
+                    </button>
+                </span>
+            </a>
+            <form class="form-inline nav-link text-white px-0" asp-area="Identity" asp-page="/Account/Logout"
+                asp-route-returnUrl="@Url.Action("Index", "Home" , new { area="" })">
+                <span class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class=" h1 bi bi-box-arrow-right d-block d-md-none mb-0"></i>
+                        <p class="d-none d-md-block mb-0">Logout</p>
+                    </button>
+                </span>
+            </form>
+            </li>
+            }
+            else
+            {
+            <li class="d-flex nav-item">
+            <a asp-area="Identity" asp-page="/Account/Register" class="nav-link text-white px-0">
+                <span class="text-end">
+                    <button type="button" class="btn btn-light border text-dark me-2">
+                        Đăng Ký
+                    </button>
+                </span>
+            </a>
+            <a asp-area="Identity" asp-page="/Account/Login" class="nav-link text-white px-0">
+                <span class="text-end">
+                    <button type="button" class="btn btn-primary">
+                        Đăng Nhập
+                    </button>
+                </span>
+            </a>
+            </li>
+            }
+        

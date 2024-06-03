@@ -1,0 +1,14 @@
+@{
+    var ControllerName = ViewData["ControllerName"];
+}
+<h5>@ViewBag.ErrorMessage</h5>
+<div asp-validation="All"></div>
+<h2 class="pb-3">Xác nhận xóa</h2>
+<form class="form-group" asp-controller="@ControllerName" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    @RenderBody()
+    <div class="modal-footer">
+        <input class="btn btn-lg btn-primary" type="submit" value="Xóa sản phẩm">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-secondary"> Hủy</button>
+    </div>
+</form>

@@ -1,0 +1,10 @@
+@model IEnumerable<SportShop.Models.ProductViewModel>
+@{
+     var categoryName = ViewData["Title"];
+}
+<h2 class="mb-5">@categoryName</h2>
+<div class= "container">
+   <div class="row row-cols-2 row-cols-md-3 g-4" id="khuTimKiem">
+        @Html.Partial("~/Views/Search/_ProductsFound.cshtml", Model)
+    </div>
+</div>

@@ -1,0 +1,12 @@
+@model SportShop.Models.MessageViewModels.RemoveReviewViewModel
+
+
+<div class="text-center">
+<form asp-controller ="Reviews" asp-action="Remove">
+    <h2>@Model.Message</h2>
+    <input type="hidden" name="ProductId" value="@Model.ProductId"/>
+    <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl"/>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="toast" data-bs-target="#liveToast" data-bs-autohide="false" aria-label="Close">Hủy</button>
+    <button type="submit" class="btn btn-primary">Xóa</button>
+</form>
+</div>

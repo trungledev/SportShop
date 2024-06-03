@@ -1,0 +1,66 @@
+@page "/UserRole"
+@model IndexUserRoleModel
+
+@{
+    ViewData["title"] = "Role of User";
+    var errorMessage = TempData["ErrorMessage"];
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-page-handler="SearchUser">
+    <span asp-validation-for="Input.Email" class="text-danger mb-3"></span>
+    <label asp-for="Input.Email" class="form-label mb-3"></label>
+    <input asp-for="Input.Email" name="Email" class="form-control mb-3" type="email" />
+    <p class="text-danger">( Phải nhập chính xác email để có thể tìm được email )</p>
+    <button type="submit" class="btn btn-outline-primary">Tìm kiếm</button>
+</form>
+@* @if(TempData.ContainsKey("ErrorMessage"))
+{
+    <partial name="_StatusMessage" model="errorMessage"/>
+} *@
+
+@if(Model.UserRoleModels == null)
+{
+<h2 class="text-center text-black"> Không tìm thấy người dùng</h2>
+<p class="text-center text-secondary">Hãy nhập lại email</p>
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Email</th>
+            <th scope="col">Họ và têm</th>
+            <th scope="col">Vai trò</th>
+            <th scope="col">Tác vụ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.UserRoleModels)
+        {
+        <tr>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @item.FullName
+            </td>
+            <td>
+                @foreach(var role in item.Roles)
+                {
+                <span>|</span>@role<span>|</span>
+                }
+            </td>
+            <td>
+                <form method="post" asp-page="./UpdateRoleUser">
+                    <input type="hidden" value="@item.UserId" name="UserId"/>
+                    <button type="submit" class="btn btn-outline-success">Cập nhật role</button>
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+@section Scripts {
+<partial name="_ValidationScriptsPartial.cshtml" />
+}

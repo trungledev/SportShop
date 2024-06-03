@@ -1,0 +1,170 @@
+@model SportShop.Models.ProductViewModel
+@{
+    ViewData["Title"] = Model.NameProduct;
+    var isSigned =(bool) ViewData["IsSigned"];
+    string pathImage = Model.Category + ".png";
+}
+@* Chi tiet San Pham *@
+<section id="chitiet ">
+    <div class="container-xl align-items-center">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="~/images/@pathImage" class="img-fluid" alt="anhSanPham">
+            </div>
+            <div class="col-md-6 pt-3">
+                <h1>@Html.DisplayFor(model=> model.NameProduct)</h1>
+                <p class=" lead text-secondary mb-3">@Html.DisplayFor(model => model.Information)</p>
+                <h2 class="text-primary mb-3">@Html.DisplayFor(model => model.Price) đ</h2>
+                <input id="star" type="hidden" class="rating" name="NumberOfStar" value="@Model.AverageStar" disabled /><span> ( @Model.QuantityAllReview )</span> 
+                <p class="lead">
+                    Còn: @Html.DisplayFor(model => model.Quantity) (sp)</p>
+                <div>
+                    
+                    <form id="themVaoGioHang" asp-controller="Products" asp-action="ThemVaoGioHang" asp-route-id="@Model.Id" >
+                        <button class="btn btn-outline-secondary py-0 giam">-</button>
+                        <input type="number" value="1" max="@Model.Quantity" min="1" name="soLuong"
+                            style="width: 50px;">
+                        <button class="btn btn-outline-secondary py-0 tang">+</button>
+                        <div class="my-3">
+                            <button class="btn btn-warning btn-lg" id="toastBtnThemVaoGioHang" type="button">
+                            Thêm vào giỏ hàng
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="bg-light">
+    <div class="container-lg my-5">
+        <div class="text-center">
+            <h2><b>Review</b></h2>
+        </div>
+        <!-- Collapse tao review -->
+        <div class="row justify-content-center">
+            <div class="col-md-8  text-center">
+                <div class="mb-3" id="btnCreateReview">
+                    @* data-bs-toggle="collapse" data-bs-target="#createReview" aria-expanded="false" aria-controls="collapseExample"  *@
+                    <button id="btnCollapseTao" class="btn btn-primary" type="button" >
+                        Review của bạn
+                    </button>
+                </div>
+                <div class="collapse" id="createReview">
+                    <div class="collapse-body mb-5">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hien thi cac review  -->
+        <div class="row justify-content-center my-5">
+            <!-- Hien thi nd cac review -->
+            <div class="col-lg-9 review review-body">
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@* Toast for thong bao*@
+<div class="position-fixed top-50 start-50 translate-middle p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide bg-light" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto text-primary h3">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" data-bs-target="#liveToast" data-bs-autohide="false" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-center">
+            
+        </div>
+    </div>
+</div>
+@if(isSigned)
+{
+    <script>
+       $("button#btnCollapseTao").click(function(){
+            $.get("/Reviews/CreateOrUpdate?productId= " + @Model.Id,function(data){
+                $("div.collapse-body").html(data);
+                $('div#createReview').collapse('toggle');            
+       });
+        });
+    </script>
+}
+else
+{
+    <script>
+    $("button#btnCollapseTao").click(function(){  
+        var productId = @Model.Id; 
+        $.get("/Reviews/CreateOrUpdate?productId=" + productId,function(data){
+                    $(".toast-body").html(data);
+                    ShowToast();
+                });
+    });
+    </script>
+}
+
+<script type="text/javascript">
+    GetReviews();
+    $(document).ready(function () {  
+        
+        //Thong Bao loi them vao gio hang
+        $("button#toastBtnThemVaoGioHang").click(function(){
+            var idSanPham = @Model.Id;
+            var valInput = $(this).parent().siblings("input").val();
+            var formData= "id=" + idSanPham + "&quantity=" + valInput;
+            $.post("/Carts/AddToCart?" + encodeURI(formData),function(data){
+                $(".toast-body").html(data);
+                ShowToast();
+            });
+        });
+        $(document).click(function(){
+            //Dong toast
+            var thongBao = $("div#liveToast");
+            var toast = new bootstrap.Toast(thongBao);
+            //toast.hide();
+
+            //Dong modal
+            // $('div#taoReview').collapse('toggle');
+        });
+        //Nut tang giam input
+        $("button.tang").click(function () {
+            event.preventDefault();
+            var input = $(this).siblings("input");
+            var valInput = parseInt(input.val());
+            input.val(valInput +1);
+            //$(this).siblings("input").val(parseInt($(this).siblings("input").val()) + 1);
+        });
+        $("button.giam").click(function () {
+            event.preventDefault();
+            var input = $(this).siblings("input");
+            var valInput = parseInt(input.val());
+            if (valInput > 1) {
+                input.val(valInput - 1);
+            }
+        });
+    });
+    function ShowToast() {
+        var thongBao = $("div#liveToast");
+        var toast = new bootstrap.Toast(thongBao);
+        toast.show();
+    };
+    function GetReviews()
+    {
+        var productId = @Model.Id;
+        $.ajax({
+            type: "GET",
+            url:"/Reviews/Index",
+            data: { productId : productId},
+            dataType:"html",
+            contentType:false,
+            success:(function(data){
+                $(".review-body").html(data);
+            }),
+            error: (function(data){
+                alert("Khong hien thi duoc review");
+            })
+        });
+    }
+</script> 

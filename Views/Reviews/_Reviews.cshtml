@@ -1,0 +1,90 @@
+@model IEnumerable<SportShop.Models.ReviewViewModel>
+@{
+    #warning Mang nhieu sao
+  var starDetails = ViewData["StarDetail"] as SportShop.Models.ReviewViewModel;
+  var averageStar = starDetails.AverageStar;
+  var detailStars = starDetails.DetailStars as Dictionary<string,int>;
+  var quantityAllReview = starDetails.QuantityAllReview;
+
+  var reviewOfUser = ViewData["ReviewOfUser"] as SportShop.Models.ReviewViewModel;
+
+}
+        @if(reviewOfUser != null)
+            {
+            
+                <h4 class="text-center">Review của bạn</h4>
+                <div class="bg-white p-2 border border-primary mb-5">
+                    <div class="pb-2">
+                        <input id="star" type="hidden" class="rating" value="@reviewOfUser.NumberOfStar" disabled />
+                    </div>
+                    <h5 class="mb-1">@reviewOfUser.Title</h5>
+                    <p class=" mb-1">@reviewOfUser.Content</p>
+                    @* <p class="mb-1 text-secondary">@reviewOfUser.NgayDang</p> *@
+                    <small>Review by @reviewOfUser.Author</small>
+                    <div>
+                        <button id="btnXoaReview" data-id="@reviewOfUser.ProductId"  class="btn btn-danger" type="button"> Xóa</button>
+                    </div>
+                </div>
+            }
+
+        <!-- Hien thi diem sao cua san pham -->
+        <h3 class="mb-3 text-center border-top ">Review từ người mua khác </h3>
+        <div class="text-center mb-5 row">
+            <div class=" mb-3 align-self-center">
+                <div class=" mb-3">
+                    <span class="me-3 lead"> 5<em class="bi-star-fill"></em> ( @detailStars["fiveStar"] )</span>
+                    <span class="me-3 lead"> 4<em class="bi-star-fill"></em> ( @detailStars["fourStar"] )</span>
+                    <span class="me-3 lead"> 3<em class="bi-star-fill"></em> ( @detailStars["threeStar"] )</span>
+                    <span class="me-3 lead"> 2<em class="bi-star-fill"></em> ( @detailStars["twoStar"] )</span>
+                    <span class="me-3 lead"> 1<em class="bi-star-fill"></em> ( @detailStars["oneStar"] )</span>
+            </div>
+                <div>
+                    <h3>
+                       @averageStar <em class="bi-star-fill"></em><span class="h3 text-black">( @quantityAllReview )</span>
+                    </h3>
+                </div>
+            </div>
+            
+        </div> 
+        <div class="list-group list-group-flush">
+            @if(Model.Count() == 0)
+            {
+                <h3 class="text-secondary text-center pb-5"> Chưa có bài đánh giá</h3>
+            }
+            else
+            {
+                @foreach(var review in Model)
+                {
+                    <div class="list-group-item mb-3 border">
+                        <div class="pb-2">
+                            <input id="star" type="hidden" class="rating" name="numberOfStar" value="@review.NumberOfStar" disabled />
+                        </div>
+                        <h5 class="mb-1">
+                            @Html.DisplayFor(modelItem =>review.Title)
+                        </h5>
+                        <p class=" mb-1">
+                            @Html.DisplayFor(modelItem =>review.Content)
+                        </p>
+                        <p class="mb-1 text-secondary">
+                            @* @Html.DisplayFor(modelItem =>review.NgayDang) *@
+                        </p>
+                        <small>Review by @Html.DisplayFor(modelItem =>review.Author)</small>
+                    </div>
+                }
+            }
+            
+        </div>
+
+
+
+        <script type="text/javascript" src="~/bootstrapRating/bootstrap-rating.js"></script>
+        <script>
+             $("button#btnXoaReview").click(function(){
+            var productId = $(this).attr("data-id");
+            $.get("/Reviews/Remove?productId=" + productId,function(data){
+                $(".toast-body").html(data);
+                ShowToast();
+            });
+        });
+        
+        </script>

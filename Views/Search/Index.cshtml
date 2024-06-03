@@ -1,0 +1,161 @@
+@model IEnumerable<SportShop.Models.ProductViewModel>
+
+@using System.Text.Encodings.Web
+@inject HtmlEncoder htmlEncoder
+@{
+    var wordSearch = ViewData["WordSearch"];
+    var urlSanPhamTangDan = string.Format(
+      "/Search/AscendingPrice");
+    
+    var urlSanPhamGiamDan = string.Format(
+      "/Search/DescendingPrice");
+
+    var categoryNames = ViewData["CategoryNames"] as IList<string>;
+    var producerNames = ViewData["ProducerNames"] as IList<string>;
+    //string urlSanPhamTangDan = Url.Encode("/Search/SanPhamGiaTangDan");
+}
+<h5 class="fw-light"> Kết quả từ tìm kiếm:<strong> @wordSearch </strong> </h5>
+@* @if(ViewData["Message"] as IList<int> != null)
+    {
+        @foreach(var item in ViewData["Message"] as IList<int>)
+        {   
+            <span> @item </span>
+        }
+    } *@
+
+
+<section id="timKiem">
+        <div class="container-xl bg-light py-3">
+            <div class="row justify-content-between">
+                <!-- Bo loc tim kiem -->
+                <div class="col-md-3  d-none d-md-block">
+                    <div class=" border border-1 bg-white px-3">
+                        <p class="my-3 text-center border-bottom">BỘ LỌC TÌM KIẾM</p>
+                        <!-- Lua chon Thuong hieu -->
+                        <form id="boLocTimKiem" asp-action="SearchFilters" >
+                            <div class="border-bottom mb-3">
+                                <p>Loại</p>
+                                @foreach(var categoryName in categoryNames)
+                                {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@categoryName" name="Categories">
+                                    <label class="form-check-label">
+                                        @categoryName
+                                    </label>
+                                </div>
+                                }
+                            </div>
+                            <div class="border-bottom mb-3">
+                                <p>Thương hiệu</p>
+                                @foreach(var producerName in producerNames)
+                                {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@producerName" name="Producers" >
+                                    <label class="form-check-label" >
+                                        @producerName
+                                    </label>
+                                </div>
+                                }
+                            </div>
+                            <div class="border-bottom pb-3 mb-3 ">
+                                <p>Giá</p>
+                                <p class="m-0">Từ</p>
+                                <div class="col-9 input-group">
+                                    <input type="text" class="form-control number" name="MinPrice" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" value="0"  placeholder="0">
+                                    <span class="input-group-text">đ</span>
+                                </div>
+                                <p class="m-0">Đến</p>
+                                <div class="col-9 input-group">
+                                    <input type="text" class="form-control number" name="MaxPrice" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="12" placeholder="99,999,999">
+                                    <span class="input-group-text">đ</span>
+                                </div>
+                            </div> 
+                            <div class="text-center mb-3">
+                                <button type="button" class="btn btn-primary " id="btnSearchFilters">Áp dụng</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <!-- Thanh Sap Xep Theo -->
+                    <div class=" bg-white border border-1 align-items-center mb-3 d-none d-md-block">
+                        <div class="d-flex my-2 px-3">
+                            <p class="lead my-0 ">Sắp xếp theo:</p>
+                            <button id="tangDan" class="btn btn-outline-primary ms-3 ms-md-5">
+                                <em class="bi bi-arrow-up"></em>
+                                Giá tăng dần
+                            </button>
+                            <button id="giamDan" class="btn btn-outline-primary ms-3 ms-md-5">
+                                <em class="bi bi-arrow-down"></em>
+                                Giá giảm dần
+                            </button>
+
+                        </div>
+                    </div>
+                    <!-- Cac san pham tim kiem -->
+                    <div class="row row-cols-2 row-cols-md-3 g-4 justify-content-center" id="khuTimKiem">
+                        @Html.Partial("_ProductsFound.cshtml", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(document).ready(function(){
+            var khuHienThi = $("div#khuTimKiem");
+           function serealizeSelects (select)
+{
+    var array = [];
+    select.each(function(){ array.push($(this).val()) });
+    return array;
+}
+           $("button#btnSearchFilters").click(function(e) {
+                event.preventDefault();
+                var formData = new FormData();
+                var valueCategories = serealizeSelects($("input[name='Categories']:checked"));
+                var valueProducers = serealizeSelects($("input[name='Producers']:checked"));
+                var minPrice = $("input[name='MinPrice']").val();
+                var maxPrice = $("input[name='MaxPrice']").val();
+                formData.append("Categories", valueCategories);
+                formData.append("Producers", valueProducers);
+                formData.append("MinPrice", minPrice);
+                formData.append("MaxPrice", maxPrice);
+                $.ajax({
+                    type: "POST",
+                    url: "/Search/SearchFilters",
+                    data: formData,
+                    encode: true,
+                    dataType: "html",
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: (function(data){
+                        khuHienThi.html(data);
+                    }),
+                    error: (function(){
+                        alert("loi");
+                    })
+                });
+           });
+
+            $("button#tangDan").click(function(){
+                event.preventDefault();
+                khuHienThi.load("@urlSanPhamTangDan");
+            });
+            $("button#giamDan").click(function(){
+                event.preventDefault();
+                khuHienThi.load("@urlSanPhamGiamDan");
+            });
+            $("input.number").keyup(function(){
+                var input = $(this);
+                var value = input.val();
+                var daThemDauPhay = ThemDauPhay(value);
+                input.val(daThemDauPhay);
+            });
+            function ThemDauPhay(number) {
+                var nfObject = new Intl.NumberFormat('en-US');
+               var output = nfObject.format(number);
+               return output;
+            }
+        });
+    </script>

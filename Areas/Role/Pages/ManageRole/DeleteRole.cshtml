@@ -1,0 +1,14 @@
+@page
+@model DeleteRoleModel
+@{
+    ViewData["Title"] = "Xóa role";
+}
+<h1>@ViewData["Title"]</h1>
+<form method="post">
+    <input asp-for="Input.Id" type="hidden" class="form-control mb-3"/>
+
+    <label asp-for="Input.Name" class="form-label mb-3"></label>
+    <input asp-for="Input.Name" type="text" class="form-control mb-3" readonly/>
+    <a class="btn btn-secondary" asp-page="./Index">Hủy</a>
+    <button type="submit" class="btn btn-primary"> Xóa</button>
+</form>

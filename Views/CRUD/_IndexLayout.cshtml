@@ -1,0 +1,45 @@
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    ViewData["Title"]= ViewData["PageName"];
+    var controllerName = ViewData["ControllerName"] as string;
+}
+
+<h2>@ViewData["Title"]</h2>
+<button class="btn btn-primary btnCrud" data-controller="@controllerName" data-crud="Create"
+        data-bs-toggle="modal" data-bs-target="#crudModal" type="button">Tạo</button>
+<div>
+    @RenderBody()
+</div>
+@* Modal CRUD *@
+<div class="modal fade" id="crudModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Thông báo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </div>
+            <div class="modal-body">
+                @* Body Modal *@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $("button.btnCrud").click(function () {
+            var method = $(this).attr("data-crud");
+            var controllerName = $(this).attr("data-controller");
+            var id = $(this).attr("data-route-id");
+            if (method == "Create")
+                $("div.modal-body").load("/" + controllerName + "/Create?crud=" + method);
+            else if (method == "Update")
+                $("div.modal-body").load("/" + controllerName + "/Update?id=" + id + "&crud=" + method);
+            else if (method == "Delete")
+                $("div.modal-body").load("/" + controllerName + "/Delete?id=" + id);
+
+        });
+    });
+</script>

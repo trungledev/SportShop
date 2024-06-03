@@ -1,0 +1,15 @@
+@model SportShop.Models.LookupViewModel;
+@{
+    Layout = "/Views/CRUD/_CreateOrUpdateLayout.cshtml";
+}
+
+<div class="form-body">
+    <div class="form-group">
+        <input asp-for="Id" class="form-control" type="hidden" />
+    </div>
+    <div class=" mb-3">
+        <label class="form-label" asp-for="Name"></label>
+        <input asp-for="Name" class="form-control">
+        <span class="danger" asp-validation-for="Name" style="color:red;"></span>
+    </div>
+</div>

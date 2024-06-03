@@ -1,0 +1,94 @@
+﻿@{
+ViewData["Title"] = "Trang Chủ";
+var categoriesNames = ViewData["CategoriesNames"] as IList<string>;
+  }
+
+  @* Su Kien *@
+  <section id="suKien">
+    <div div="container-xl" style="position:relative">
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item" data-bs-interval="5000">
+            <img class="img-fluid" src="images/HeroImage.png" alt="HeroImage" />
+            <div style="position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);"> <a asp-controller="Search" asp-action="Index" class="btn btn-lg btn-primary">Shop
+                Now</a></div>
+          </div>
+          <div class="carousel-item active" data-bs-interval="20000">
+            <div class="ratio ratio-16x9">
+              <video controls autoplay muted>
+                <source src="videos/intro2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+
+    </div>
+  </section>
+  @* Danh Muc *@
+  <section id="danhMuc">
+    <div class="container-xl bg-light my-3">
+      <h2 class="text-center">
+        Danh mục sản phẩm
+      </h2>
+      <div class="list-group list-group-horizontal justify-content-around">
+          @if(categoriesNames.Count == 0)
+            {
+                <h5 class="text-secondary">
+                    No categories
+                </h5>
+            }
+        @foreach (var categoryName in categoriesNames)
+        {
+        var pathImage = "images/" + categoryName + ".png";
+        <a class="list-group-item" asp-controller="Products" asp-action="Category"
+          asp-route-categoryName="@categoryName">
+          <img src="@pathImage" class="img-fluid " alt="">
+          <div class="text-center">
+            <em class="bi bi-tv"></em>
+            <span class="fw-bold">@categoryName</span>
+          </div>
+        </a>
+
+        }
+      </div>
+    </div>
+  </section>
+  @* Area display of Product show all Type have (Tivi, Amply, Speaker,...) *@
+  <section id="showProduct">
+    <div class="container-xl">
+      <div id="loadingDiv" class="text-center my-3">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <h2>Loading Products</h2>
+      </div>
+      <div id="showProduct">
+      </div>
+    </div>
+  </section>
+  @section scripts {
+  <script>
+    var loading = $('div#loadingDiv').show();
+    var showProduct = $("div#showProduct");
+    var categoryName = showProduct.attr("data-categoryName");
+    $(showProduct).load("/Products/ShowProductsByCategory/?quantity=5",function () {
+      loading.hide();
+  });
+  </script>
+  }

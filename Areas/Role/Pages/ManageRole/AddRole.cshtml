@@ -1,0 +1,15 @@
+@page   
+@model AddRoleModel
+
+@{
+  ViewData["Title"] = "Thêm Role";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" >
+  <span asp-validation-for="Input.Name" class="text-danger mb-3"></span>
+  <label asp-for="Input.Name" class="form-label mb-3"></label>
+  <input asp-for="Input.Name" type="text" class="form-control mb-3"/>
+  <button class="btn btn-primary" type="submit">Tạo</button>
+</form>

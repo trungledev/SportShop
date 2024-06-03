@@ -1,0 +1,50 @@
+@{
+    var method = ViewData["Method"];
+    var controllerName = ViewData["ControllerName"];
+}
+@* Modal-body *@
+<h2> @method @controllerName</h2>
+<div class="errorView">
+    @* View Error *@
+    <p id="errorMessage" class="text-danger"> </p>
+</div>
+<div id="error" asp-validation-summary="All" style="color:red;"></div>
+    <form id="formLookup">
+        @Html.AntiForgeryToken()
+        @RenderBody()
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            <button id="submit" class="btn btn-primary" type="button" data-controller="@controllerName" data-method="@method">Lưu</button>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function () {
+            //$(document).on('keydown', function(e) {
+                //Press enter to submit form
+                //if(e.keyCode == 13) {
+                 //   $("button#submit").click();
+                //}   
+            //});
+            $("button#submit").click(function () {
+                submitForm();
+            });
+        });
+        function submitForm(method) {
+            var formData = $("form#formLookup").serialize();
+            var controllerName = $("button#submit").attr("data-controller");
+            var methodName = $("button#submit").attr("data-method");
+                $.ajax({
+                    url: '/'+ controllerName +'/' + methodName +"?crud=" + methodName,
+                    type: 'POST',
+                    data: formData,
+                    success: function (result) {
+                        $(".modal-body").html(result);
+                    },
+                    error: function (xhr, exception) {
+                        $("p#errorMessage").text("Điền đầy đủ thông tin để tiếp tục");
+                        return false;
+                    }
+                });
+        }            
+    </script>

@@ -1,0 +1,48 @@
+@model IEnumerable<SportShop.Models.ProducerViewModel>;
+@{
+    Layout = "/Views/CRUD/_IndexLayout.cshtml";
+    ViewData["Title"]= ViewData["NamePage"];
+    var controllerName = ViewData["ControllerName"] as string;
+}
+    <table class="table">
+        <thead>
+            <th class="col">
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th class="col">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th> *@
+            <th>
+            </th>
+        </thead>
+        @foreach(var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td> *@
+            <td>
+                <button  class="btn btn-success btnCrud" data-controller="@controllerName" data-route-id="@item.Id"
+                    data-crud="Update" data-bs-toggle="modal" data-bs-target="#crudModal" type="button">Sửa</button> |
+                <button  class="btn btn-danger btnCrud" data-controller="@controllerName" data-route-id="@item.Id"
+                    data-crud="Delete" data-bs-toggle="modal" data-bs-target="#crudModal" type="button">Xóa</button>
+            </td>
+        </tr>
+        }
+
+    </table>

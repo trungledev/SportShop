@@ -1,0 +1,73 @@
+@model IEnumerable<SportShop.Models.ProductViewModel>
+
+@{
+    Layout = "/Views/CRUD/_IndexLayout.cshtml";
+    ViewData["Title"] = ViewData["NamePage"];
+    var controllerName = ViewData["ControllerName"] as string;
+}
+<table class="table">
+    <thead>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.NameProduct)
+        </th>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th class="col">
+           @Html.DisplayNameFor(model => model.Producer)
+        </th>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.Information)
+        </th>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.Price) 
+        </th>
+        <th class="col">
+            @Html.DisplayNameFor(model => model.Quantity) 
+        </th>
+        <th>
+        </th>                  
+    </thead>
+    @foreach(var item in Model)
+    {
+        <tr>
+            <td class="fw-bold">
+                @Html.DisplayFor(modelItem =>item.NameProduct)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem =>item.Category)
+            </td>
+             <td >
+                @Html.DisplayFor(modelItem =>item.Producer)
+            </td>
+             <td class="text-secondary">
+                @Html.DisplayFor(modelItem =>item.Information)
+            </td>
+             <td >
+                @Html.DisplayFor(modelItem =>item.Status)
+            </td>
+            <td class="text-primary lead">
+                @Html.DisplayFor(modelItem =>item.Price)đ
+            </td>
+            <td class="text-center lead">
+                @Html.DisplayFor(modelItem =>item.Quantity)
+            </td>
+            <td>
+                <span class="w-100 d-inline-flex">
+                    <button data-id ="@item.Id" Category="button" class="btn btn-success me-3 btnCrud" data-controller="@controllerName" data-route-id="@item.Id" data-crud="Update" data-bs-toggle="modal" data-bs-target="#crudModal">
+                    Edit
+                    </button>
+                    <a class="btn btn-secondary me-3" asp-controller="Products" asp-action="Detail" asp-route-id="@item.Id" >
+                    Detail
+                    </a>
+                    <button data-id ="@item.Id" Category="button" class="btn btn-danger btnCrud" data-controller="@controllerName" data-route-id="@item.Id" data-crud="Delete" data-bs-toggle="modal" data-bs-target="#crudModal">
+                    Delete
+                    </button>
+                </span>
+            </td>
+        </tr>        
+    }
+</table>

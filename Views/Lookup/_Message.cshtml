@@ -1,0 +1,18 @@
+@model SportShop.Models.MessageViewModels.CRUDMessageViewModel
+
+<div class="text-center">
+    @if(Model.Success == 1)
+    {
+    <p class="h2">
+        <span><i class="bi bi-check-circle text-success"></i></span>
+    </p>
+    }
+    else if (Model.Success == -1)
+    {
+    <p class="h2">
+        <span><i class="bi bi-exclamation-octagon text-danger"></i></span>
+    </p>
+    }
+    <p id="content-body" class="h3 fw-light"> @Model.Message</p>
+    <a class="btn btn-primary" href="@Model.ReturnUrl"> Đã hiểu </a>
+</div>

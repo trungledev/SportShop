@@ -1,0 +1,226 @@
+@model IEnumerable<SportShop.Models.CartViewModel>
+
+        <a href="/Carts/Index" class="btn btn-secondary text-start">Quay lại</a>
+      <div class="py-5 text-center">
+        <h2>Thanh toán </h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Giỏ hàng của bạn</span>
+            <span class="badge badge-secondary badge-pill">3</span>
+          </h4>
+          <ul class="list-group mb-3">
+          @foreach (var item in Model)
+          {
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">@item.Name</h6>
+                @* <small class="text-muted">Brief description</small> *@
+              </div>
+              <span class="text-muted">@item.Quantity</span>
+              <span class="text-muted">@Html.DisplayFor(modelItem => item.Total)đ</span>
+            </li>
+            
+          }
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0">Mã giảm giá</h6>
+                <small>Free Ship</small>
+              </div>
+              <span class="text-success">-15k</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Tổng (VND)</span>
+              <strong id="totalAll">@Model.Sum(x=> x.Total)đ</strong>
+            </li>
+          </ul>
+
+          <form class="card p-2">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Mã giảm giá">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary">Áp dụng</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-8 order-md-1">
+          <h4 class="mb-3">Địa chỉ thanh toán</h4>
+          <form class="needs-validation" asp-controller="Cart" asp-acton="Checkout" method="Post">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label name="FirstName">Họ</label>
+                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Không được bỏ trống
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName">Tên</label>
+                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                   Không được bỏ trống
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="username">Tên gọi</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="bi bi-file-earmark-person"></i></span>
+                </div>
+                <input type="text" class="form-control" id="username" placeholder="Username" required>
+                <div class="invalid-feedback" style="width: 100%;">
+                   Không được bỏ trống
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email">Email <span class="text-muted">(Không bắt buộc)</span></label>
+              <input type="email" class="form-control" id="email" placeholder="you@example.com">
+              <div class="invalid-feedback">
+               Vui lòng nhập để bên vận chuyển cập nhật thông tin
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address">Địa chỉ</label>
+              <input type="text" class="form-control" id="address" placeholder="Đường " required>
+              <div class="invalid-feedback">
+                Vui lòng nhập địa chỉ nhận
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address2">Địa chỉ 2 <span class="text-muted">(Không bắt buộc)</span></label>
+              <input type="text" class="form-control" id="address2" placeholder="Cơ quan hoặc nhà riêng">
+            </div>
+
+            <div class="row">
+              <div class="col-md-5 mb-3">
+                <label for="country">Quốc gia</label>
+                <select class="custom-select d-block w-100" id="country" required>
+                  <option value="">Chọn...</option>
+                  <option>VietNam</option>
+                  <option>Laos</option>
+                </select>
+                <div class="invalid-feedback">
+                  Vui lòng nhập quốc gia
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="state">Tỉnh</label>
+                <select class="custom-select d-block w-100" id="state" required>
+                  <option value="">Chọn...</option>
+                  <option>Hà Nội</option>
+                  <option>Thái Nguyên</option>
+                  <option>Cà Mau</option>
+                </select>
+                <div class="invalid-feedback">
+                  Vui lòng nhập tỉnh
+                </div>
+              </div>
+               <div class="col-md-3 mb-3">
+                <label for="district">Huyện</label>
+                <select class="custom-select d-block w-100" id="district" required>
+                  <option value="">Chọn...</option>
+                  <option>Thanh Xuân</option>
+                  <option>Hai Bà Trưng</option>
+                </select>
+                <div class="invalid-feedback">
+                  Vui lòng nhập huyện
+                </div>
+              @* <div class="col-md-3 mb-3">
+                <label for="zip">Zip</label>
+                <input type="text" class="form-control" id="zip" placeholder="" required>
+                <div class="invalid-feedback">
+                  Zip code required.
+                </div> *@
+              </div>
+            </div>
+            <hr class="mb-4">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="same-address">
+              <label class="custom-control-label" for="same-address">Địa chỉ vận chuyển là địa chỉ thanh toán </label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="save-info">
+              <label class="custom-control-label" for="save-info">Lưu thông tin vận chuyển cho lần sau</label>
+            </div>
+            <hr class="mb-4">
+
+            <h4 class="mb-3">Phương thức thanh toán</h4>
+
+            <div class="d-block my-3">
+              <div class="custom-control custom-radio">
+                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+                <label class="custom-control-label" for="credit">Thẻ tín dụng</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+                <label class="custom-control-label" for="debit">Thẻ ghi nợ</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+                <label class="custom-control-label" for="paypal">ZaloPay</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="cc-name">Tên trên thẻ</label>
+                <input type="text" class="form-control" id="cc-name" placeholder="" required>
+                <small class="text-muted">Tên đầy đủ được in trên thẻ</small>
+                <div class="invalid-feedback">
+                  Tên trên thẻ là bắt buộc
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="cc-number">Số thẻ</label>
+                <input type="text" class="form-control" id="cc-number" placeholder="" required>
+                <div class="invalid-feedback">
+                  Số thẻ là bắt buộc
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <label for="cc-expiration">Ngày hết hạn</label>
+                <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+                <div class="invalid-feedback">
+                  Ngày hết hạn là bắt buộc
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="cc-expiration">CVV</label>
+                <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
+                <div class="invalid-feedback">
+                  Mã bảo mật là cần thiết
+                </div>
+              </div>
+            </div>
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" id="btnConfirmCheckout" type="submit">Hoàn tất thanh toán</button>
+          </form>
+        </div>
+<script>
+  $(document).ready(function(){
+         
+          var total = $("#totalAll");
+          total.text(ThemDauPhay(total.text()));
+  });
+   function ThemDauPhay(nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            }
+</script>

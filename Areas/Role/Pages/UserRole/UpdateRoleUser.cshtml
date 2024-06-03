@@ -1,0 +1,46 @@
+@page
+@model UpdateRoleUserModel
+
+@{
+    ViewData["Title"] = "Cập nhật role";
+}
+<h1>@ViewData["Title"]</h1>
+<div>
+    <form method="post" asp-page-handler="UpdateRoleOfUser">
+        <input asp-for="Input.UserId" type="hidden"/>
+        @foreach(var roleName in @Model.Input.RoleNames)
+        {
+             @if(roleName == "Guest")
+        {
+             <div class="form-group mb-3">
+                <input name="Input.RoleNames" class="form-check-input" value="@roleName" checked hidden/>
+                <label class="form-check-label">@roleName</label>
+            </div>
+        }
+        else{
+            <div class="form-group mb-3">
+                <input type="checkbox" name="Input.RoleNames" class="form-check-input" value="@roleName"/>
+                <label class="form-check-label">@roleName</label>
+            </div>
+        }
+        }
+        @foreach(var roleName in @Model.Input.RoleExistNames)
+        {   @if(roleName == "Guest")
+        {
+             <div class="form-group mb-3">
+                <input name="Input.RoleNames" class="form-check-input" value="@roleName" checked hidden/>
+                <label class="form-check-label">@roleName</label>
+            </div>
+        }
+        else{
+            <div class="form-group mb-3">
+                <input type="checkbox" name="Input.RoleNames" class="form-check-input" value="@roleName" checked/>
+                <label class="form-check-label">@roleName</label>
+            </div>
+            }
+        }
+        <div class="form-group mb-3">
+            <button class="btn btn-primary" type="submit"> Cập nhật role</button>
+        </div>
+    </form>
+</div>

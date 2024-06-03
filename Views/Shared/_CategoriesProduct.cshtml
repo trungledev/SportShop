@@ -1,0 +1,10 @@
+@model IEnumerable<string>
+
+    @foreach (string category in Model)
+    {
+        <li><a class="dropdown-item text-dark" asp-controller="Products" asp-action="Category" asp-route-categoryName="@category">
+                <em class="bi bi-tv"></em>
+                @category
+            </a></li>
+    }
+ 

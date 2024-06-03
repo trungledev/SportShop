@@ -1,0 +1,62 @@
+@using SportShop.Data;
+@model SportShop.Models.ProductViewModel
+@{
+Layout = "/Views/CRUD/_CreateOrUpdateLayout.cshtml";
+}
+
+<div class="form-group">
+    <input asp-for="Id" class="form-control" type="hidden" />
+</div>
+<div class="form-group mb-3">
+    <label class="form-label" asp-for="NameProduct"></label>
+    <input class="form-control" asp-for="NameProduct" />
+    <span class="danger" asp-validation-for="NameProduct" style="color:red;"></span>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Categories"></label>
+    <select class="form-select" asp-items="@Model.Categories" asp-for="CategoryId">
+        <option disabled selected value="0"> Select one </option>
+    </select>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Producer"></label>
+    <select asp-for="ProducerId" asp-items="@Model.Producers" class="form-select">
+        <option disabled selected value="0"> Select one </option>
+    </select>
+    <span class="danger" asp-validation-for="Producer" style="color:red;"></span>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Information"></label>
+    <textarea class="form-control" asp-for="Information" rows="5"></textarea>
+    <span class="danger" asp-validation-for="Information" style="color:red;"></span>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Status"></label>
+    <select class="form-select" asp-items="@Model.Statuses" asp-for="StatusId">
+        <option disabled selected value="0">Select one</option>
+    </select>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Price"></label>
+    <input asp-for="Price" class="form-control">
+    <p>Kết quả: <span id="show-price">0</span> đ</p>
+    <span class="danger" asp-validation-for="Price" style="color:red;"></span>
+</div>
+<div class=" mb-3">
+    <label class="form-label" asp-for="Quantity"></label>
+    <input asp-for="Quantity" class="form-control">
+    <span class="danger" asp-validation-for="Quantity" style="color:red;"></span>
+</div>
+<script type="text/javascript">
+     $("input#Price").keyup(function(){
+                var input = $(this);
+                var value = input.val();
+                var daThemDauPhay = ThemDauPhay(value);
+                $("span#show-price").text(daThemDauPhay);
+            });
+            function ThemDauPhay(number) {
+                var nfObject = new Intl.NumberFormat('en-US');
+               var output = nfObject.format(number);
+               return output;
+            }
+</script>

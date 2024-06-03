@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sport Shop</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ElectronicShop.styles.css" asp-append-version="true" />
+    @* Change icon *@
+    <link rel="icon" type="image/png" href="~/favicon.ico" sizes="32x32">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"
+        integrity="sha256-JwUksNJ6/R07ZiLRoXbGeNrtlFZMFDKX4hemPiHOmCA=" crossorigin="anonymous"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
+        integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    @* Bootstrap icon *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+
+    <!-- bootstrap Rating -->
+    <link href="~/bootstrapRating/bootstrap-rating.css" rel="stylesheet">
+    
+    @* <script type="text/javascript" src="~/bootstrapRating/bootstrap-rating.js"></script>  *@
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <header id="navbar-main" class="sticky-top">
+        <div>
+            <nav class=" navbar navbar-expand-md navbar-dark bg-dark px-3 py-2">
+                <div class="container">
+                    <a asp-controller="Home" asp-action="Index" class="navbar-brand text-light fw-bold">
+                        Sport Shop
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon "></span>
+                    </button>
+                    <div class="collapse navbar-collapse align-items-center justify-content-end" id="navbarMain">
+                        <ul class="navbar-nav col-12 col-lg-auto my-2 align-items-md-center my-md-0 text-small">
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <a class="nav-link text-white dropdown-toggle" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <em class="bi bi-journal-text"></em>
+                                        Admin access
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-controller="Products"
+                                                asp-action="Index" `>
+                                                <em class="bi bi-box-seam"></em>
+                                                Kho
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="Role"
+                                                asp-page="/ManageRole/Index">
+                                                <em class="bi bi-box-seam"></em>
+                                                Roles
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="Role"
+                                                asp-page="/UserRole/Index">
+                                                <em class="bi bi-box-seam"></em>
+                                                User Roles
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-dark" asp-area="Admin" asp-page="/Index">
+                                                <em class="bi bi-box-seam"></em>
+                                                Admin control data
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                            </li>
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <a class="nav-link text-white dropdown-toggle" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <em class="bi bi-tv"></em>
+                                        Sản Phẩm
+                                    </a>
+                                    <ul class="dropdown-menu bg-light" id= "categories">
+                                    </ul>
+                                </div>
+                            </li>
+                            <partial name="_LoginPartial" />
+                        </ul>
+                    </div>
+                </div>
+                <nav>
+        </div>
+        <!-- Thanh Tim Kiem -->
+        <div class=" px-2 py-2 border-bottom bg-light mb-3 justify-content-center">
+            <div class="container">
+                <form class="d-flex col-12 mb-2 mb-lg-0 me-lg-auto" method="post" asp-controller="Search"
+                    asp-action="Index" enctype="application/x-www-form-urlencoded">
+                    <input name="wordSearch" type="search" class="form-control" placeholder="Tìm kiếm..."
+                        aria-label="Search" />
+                    <button class="btn btn-outline-success ms-1" type="submit">
+                        TìmKiếm
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+
+    </div>
+    @*
+    <partial name="_CookieConsentPartial" /> *@
+    <footer class="border-top footer text-muted" style="position:absolute;bottom:0;">
+        <div class="container">
+            &copy; 2024 - Nguyen Thi Thao Chi - Sport shop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    @* button back to top *@
+    <span class="mb-3" style="position:fixed;bottom:4rem;right:0;">
+    <div id="fb-root"></div>
+        <div id="fb-customer-chat" class="fb-customerchat">
+        </div>
+        <a id="btnBackToTop" class="btn-sm text-decoration-none" role="button">
+            <span class="h1">
+                <em class="bi bi-arrow-up-circle pe-4"></em>
+            </span>
+        </a>
+    </span>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @* <script type="text/javascript" src="~/bootstrapRating/bootstrap-rating.js"></script> *@
+    @await RenderSectionAsync("Scripts", required: false)
+    
+</body>
+
+</html>

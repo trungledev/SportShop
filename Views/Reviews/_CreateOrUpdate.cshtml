@@ -1,0 +1,68 @@
+@model SportShop.Models.ReviewViewModel
+
+@if(Model == null)
+{
+    <h1 class="text-danger"> Lỗi dữ liệu truyền đến</h1>
+}
+else{
+    @* asp-controller="Reviews" asp-action="CreateOrUpdate" method="post" *@
+    <form  enctype="application/x-www-form-urlencoded"> 
+                        <input type="hidden" name="ProductId" value="@Model.ProductId"/>
+                            <div class="mb-3 ">
+                                <div>
+                                    <label class="form-label h5" asp-for="NumberOfStar"></label>
+                                </div>
+                                <input type="hidden" class="rating" value="@Model.NumberOfStar" id="numberOfStarCreate" name="NumberOfStar"/>
+                            </div>
+                            <div class="mb-3 text-start">
+                                <label class="form-label h5" asp-for="Title"></label>
+                                <input type="text" class="form-control" value="@Model.Title" autocomplete="off" name="Title">
+                            </div>
+                            <div class="mb-3 text-start">
+                                <label class="form-label h5" asp-for="Content"></label>
+                                <textarea class="form-control" name="Content" style="height: auto;">@Model.Content</textarea>
+                            </div>
+                            <button class="btn btn-secondary pe-3" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#createReview" aria-expanded="false"
+                                aria-controls="collapseExample">Hủy</button>
+                            <button class="btn btn-success" id="toastBtnCreateReview" type="button">Lưu</button>
+                        </form>
+        <script type="text/javascript" src="~/bootstrapRating/bootstrap-rating.js"></script>
+}
+        <script type="text/javascript">
+         $("button#toastBtnCreateReview").click(function (event) {
+            event.preventDefault();
+            
+            var formData = new FormData();
+            var productId = $("input[name='ProductId']").val();
+            var numberOfStar = $("input#numberOfStarCreate").val();
+            var title =  $("input[name='Title']").val();
+            var content = $("textarea[name='Content']").val();
+            formData.append("ProductId", productId );
+            formData.append("NumberOfStar", numberOfStar );
+            formData.append("Title",title);
+            formData.append("Content",content);
+
+            $.ajax ({
+            type: "POST",
+            url: "/Reviews/CreateOrUpdate",
+            data: formData,
+            encode: true,
+            dataType: "html",
+            contentType: false,
+            async: true,
+            processData: false,
+            cache: false,
+            success: (function (data) {
+                $(".toast-body").html(data);
+                GetReviews();
+                $("div#createReview").collapse("hide");
+                ShowToast();
+               }),
+            error: function(){
+                alert("Loi khong the duoc roi");
+            }
+            });
+        });
+        </script>
+        

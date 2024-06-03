@@ -1,0 +1,224 @@
+@model IEnumerable<SportShop.Models.CartViewModel>
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+    <section id="SanPhamMua">
+        <div class="container-xl" id="cartBody">
+            <div class="row justify-content-around">
+                <div class="col-md-8 border-bottom align-items-center rounded shadow-lg ">
+                    <div class="row justify-content-end border-bottom">
+                        <div class="col-1 text-md-center me-5 me-md-0">
+                            <input type="checkbox" id="checkboxAll">
+                        </div>
+                        <div class="col-9 col-md-5 ">
+                            <p class="lead fw-bold">@Html.DisplayNameFor(model => model.Name)</p>
+                        </div>
+                        <div class="col-2 d-none d-md-block">
+                            <p class="fw-bold">@Html.DisplayNameFor(model => model.Quantity)</p>
+                        </div>
+                        <div class="col-2 d-none d-md-block">
+                            <p class="fw-bold">@Html.DisplayNameFor(model => model.Total)</p>
+                        </div>
+                        <div class="col-1 col-lg-2 ">
+                            @* <button class="btn btn-danger" type="button">Xóa tất cả</button> *@
+                        </div>
+                    </div>
+                    @foreach(var item in Model)
+                    {
+                    <div class="row align-items-center justify-content-center text-center mt-3" data-id="@item.Id">
+                        <div class="col-1 text-start text-md-center checkbox mb-3">
+                            <input type="checkbox" class="checkbox" name="ProductIds" value="@item.Id" data-id="@item.Id">
+                        </div>
+                        <div class="col-9 col-md-5 mb-1">
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="~/images/Tivi.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="col-8 text-start">
+                                    <p class="lead ">@Html.DisplayFor(modelItem => item.Name)</p>
+                                    <p class="text-secondary small">@Html.DisplayFor(modelItem => item.Infomation)</p>
+                                    <p>Đơn giá: @Html.DisplayFor(modelItem =>
+                                        item.Price)đ</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-center mb-1 so-luong ">
+                            <button class="btn btn-outline-secondary btn-sm giam">-</button>
+                            <input type="number" value="@item.Quantity" max="99" min="0" data-donGia="@item.Price"
+                                data-id="@item.Id" name="quantity" style="width: 50px;">
+                            <button class="btn btn-outline-secondary btn-sm tang">+</button>
+                        </div>
+                        <div class="col-md-2 mb-1 d-none d-md-block thanhTien">
+                            <p class="lead ">@Html.DisplayFor(modelItem => item.Total)đ</p>
+                        </div>
+                        <div class="col-md-2 mb-1">
+                            <button type="button" class="btn btn-primary xoaSanPham" data-bs-toggle="modal"
+                                data-bs-target="#modalXoa">
+                                Xóa
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="modalXoa" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                Thông báo
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="h3 fw-normal">
+                                                Xóa sản phẩm?
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary btn-lg"
+                                                data-bs-dismiss="modal">Không</button>
+                                            <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal"
+                                                id="xacNhanXoa">Có</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @* <button type="button" class="btn btn-outline-primary btn-sm xoaSanPham">Xóa</button> *@
+                        </div>
+                    </div>
+                    }
+                </div>
+                <div class="col-md-3 bg-light rounded shadow-lg">
+                    <div id="thanhToan" class="container-xl text-end mb-2">
+                        <p>Voucher: <select name="" id="">
+                                <option value="0">Mã Voucher</option>
+                                <option value="1">Mã FreeShip 15K</option>
+                                <option value="2">Mã Giảm Giá 15K</option>
+                            </select>
+                        </p>
+                        <p>Tổng tiền:
+                            <span class="lead" id="tongTien">Tổng giá tiền: 0đ</span>
+                            đ
+                        </p>
+                        <button class="btn btn-warning" id="btnCheckout">Đặt Hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </section>
+
+    <script>
+        $(document).ready(function () {
+            UpdateTongTien();
+            $("button#btnCheckout").click(function (event) {
+               
+                // Returns an array of #lbItems' selected values.
+                var dataInput = serealizeSelects($("input[name='ProductIds']:checked"));
+                $.get("/Carts/Checkout?productIds=" + dataInput,function (data) {
+                    alert("Chức năng Checkout hiện mới chỉ có phần hiển thị Phần chức năng sẽ được bổ sung sau!");
+                    $("div#cartBody").html(data);
+                });
+            });
+            //Nut tang giam input
+            $("button.tang").click(function () {
+                event.preventDefault();
+                var inputSoLuong = $(this).siblings("input");
+                inputSoLuong.val(parseInt(inputSoLuong.val()) + 1);
+                UpdateThanhTien(inputSoLuong);
+                UpdateDatabase(inputSoLuong);
+            });
+            $("button.giam").click(function () {
+                event.preventDefault();
+                var inputSoLuong = $(this).siblings("input");
+                if(parseInt(inputSoLuong.val()) == 1)
+                    {
+                        $("div#modalXoa").modal("show");
+                        $("button#xacNhanXoa").click(function () {
+                            inputSoLuong.val(0);
+                            UpdateDatabase(inputSoLuong);
+                            $("div#modalXoa").modal("hide");
+                            UpdateTongTien();
+                        });
+                    }
+                else if (parseInt(inputSoLuong.val()) > 0) {
+                    inputSoLuong.val(parseInt(inputSoLuong.val()) - 1);
+                    
+                    UpdateThanhTien(inputSoLuong);
+                    UpdateDatabase(inputSoLuong);
+                    
+                };
+            });
+            //Update gia ca realtime
+            $("input[name='soLuong']").change(function () {
+                event.preventDefault();
+                var input = $(this);
+                UpdateThanhTien(input);
+                UpdateDatabase();
+            });
+            $("#checkboxAll").change(function () {
+                $("input:checkbox.checkbox").prop('checked', this.checked);
+                UpdateTongTien();
+            });
+            $("input:checkbox").change(function () {
+                UpdateTongTien();
+            });
+            $(".xoaSanPham").click(function () {
+                var input = $(this).parent().siblings(".so-luong").children("input");
+                $("button#xacNhanXoa").click(function () {
+                    input.val(0);
+                    UpdateDatabase(input);
+                    $("div#modalXoa").modal("hide");
+                    UpdateTongTien();
+                })
+
+            });
+            function serealizeSelects (select)
+            {
+                var array = [];
+                select.each(function(){ array.push($(this).val()) });
+                return array;
+            }
+            function UpdateThanhTien(input) {
+                var _input = input;
+                var donGia = parseInt(_input.attr("data-donGia"));
+                var soLuong = _input.val();
+                var thanhTien = donGia * soLuong;
+                var daThemDauPhay = ThemDauPhay(String(thanhTien));
+                _input.parent().siblings("div.thanhTien").children().text(daThemDauPhay + "đ");
+                UpdateTongTien();
+            }
+            function UpdateDatabase(input) {
+                var _input = input;
+                var id = _input.attr("data-id");
+                var soLuong = _input.val();
+                if (soLuong == 0) {
+                    input.parent().parent().remove();
+                }
+                var donGia = parseInt(_input.attr("data-donGia"));
+                $.get("/Carts/UpdateCart?id=" + id + "&quantity=" + soLuong + "&price=" + donGia, function () {
+                });
+            }
+
+            function UpdateTongTien() {
+                var sum = 0;
+                $.map($(".checkbox:checked"), function (event) {
+                    var thanhTien = $(event).parent().siblings(".thanhTien").text();
+                    var m = thanhTien.replace(/\s/g, "").replace(/,/g, '').replace("đ", "");
+                    sum += parseInt(m);
+                });
+                $("#tongTien").text(ThemDauPhay(String(sum)));
+            }
+            function ThemDauPhay(nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            }
+        });
+    </script>

@@ -1,0 +1,38 @@
+@page 
+@model IndexRoleModel
+
+@{
+  ViewData["Title"] = "Vai trò";
+  var thongBao = TempData["ErrorMessage"];
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if(TempData.ContainsKey("ErrorMessage"))
+{
+    <partial name="_StatusMessage" model="thongBao"/>
+}
+
+<a asp-page="./AddRole" class="btn btn-primary">Thêm role</a>
+
+<table class="table">
+  <tr>
+    <th>Role ID</th>
+    <th>Tên</th>
+    <th>Tác vụ</th>
+  </tr>
+  @foreach(var role in Model.roles)
+  {
+    <tr>
+        <td>@role.Id</td>
+        <td>@role.Name</td>
+        <td>
+          @if(role.Name != "Guest")
+            {
+              <a class="btn btn-success" asp-page = "./EditRole" asp-route-idRole="@role.Id"> Sửa </a>
+              <a class="btn btn-danger" asp-page = "./DeleteRole" asp-route-idRole="@role.Id"> Xóa </a>
+            }
+        </td>
+    </tr>
+  }
+</table>

@@ -1,0 +1,17 @@
+@page   
+@model EditRoleModel
+
+@{
+  ViewData["Title"] = "Chỉnh sửa role";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-page-handler="EditRole">
+  <input asp-for="Input.Id" type="hidden" class="form-control mb-3"/>
+
+  <span asp-validation-for="Input.Name" class="text-danger mb-3"></span>
+  <label asp-for="Input.Name" class="form-label mb-3"></label>
+  <input asp-for="Input.Name" type="text" class="form-control mb-3"/>
+  <button class="btn btn-primary" type="submit">Sửa</button>
+</form>

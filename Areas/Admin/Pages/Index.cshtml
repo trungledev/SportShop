@@ -1,0 +1,15 @@
+@page
+@model AdminIndexModel
+@{
+ViewData["Title"] = "Data Page";
+}
+<h1 class="text-center border-bottom">Data Page</h1>
+<div class="row row-cols-3 text-center">
+    @foreach(var item in Model.ListData)
+    {
+    <div class="col">
+        <h3 class="mb-3">@item.NameData</h3>
+        <a class="btn btn-primary" href="@item.Path">@item.NameData</a>
+    </div>
+    }
+</div>
